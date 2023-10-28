@@ -13,6 +13,9 @@ class LanguageAdapter(var mList: List<LanguageData>) :
     inner class LanguageViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val logo : ImageView = itemView.findViewById(R.id.logoIv)
         val titleTv : TextView = itemView.findViewById(R.id.titleTv)
+        val description : TextView = itemView.findViewById(R.id.description)
+        val link : TextView = itemView.findViewById(R.id.link)
+
     }
 
     fun setFilteredList(mList: List<LanguageData>){
@@ -24,13 +27,17 @@ class LanguageAdapter(var mList: List<LanguageData>) :
         val view = LayoutInflater.from(parent.context).inflate(R.layout.each_item , parent , false)
         return LanguageViewHolder(view)
     }
-
+    private var isEnable = false
     override fun onBindViewHolder(holder: LanguageViewHolder, position: Int) {
         holder.logo.setImageResource(mList[position].logo)
         holder.titleTv.text = mList[position].title
+        holder.description.text = mList[position].description
+        holder.link.text = mList[position].link
+
+
     }
 
     override fun getItemCount(): Int {
-      return mList.size
+        return mList.size
     }
 }
