@@ -1,5 +1,7 @@
 package com.example.searchviewkotlin
 
+import android.content.Intent
+import android.graphics.Color
 import android.net.Uri
 import android.util.Log
 import android.view.LayoutInflater
@@ -7,7 +9,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 
 class LanguageAdapter(var mList: List<Item>) :
     RecyclerView.Adapter<LanguageAdapter.LanguageViewHolder>() {
@@ -18,7 +22,7 @@ class LanguageAdapter(var mList: List<Item>) :
         val titleTv: TextView = itemView.findViewById(R.id.titleTv)
         val description: TextView = itemView.findViewById(R.id.description)
         val link: TextView = itemView.findViewById(R.id.link)
-
+        val card: ConstraintLayout = itemView.findViewById(R.id.card)
     }
 
     fun setFilteredList(mList: List<Item>) {
@@ -28,16 +32,40 @@ class LanguageAdapter(var mList: List<Item>) :
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LanguageViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.each_item, parent, false)
+
         return LanguageViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: LanguageViewHolder, position: Int) {
-        Log.i(TAG, "onResponse: ${mList[position].owner.avatar_url}")
-
-        holder.logo.setImageURI(Uri.parse(mList[position].owner.avatar_url))
+        val context =holder.itemView.context
+        Glide.with(context).load(mList[position].owner.avatar_url).into(holder.logo)
         holder.titleTv.text = mList[position].full_name
         holder.link.text = mList[position].html_url
         holder.description.text = mList[position].description
+        var isSelected = false
+
+        holder.card.setOnClickListener(object : View.OnClickListener {
+            override fun onClick(v: View) {
+                isSelected = !isSelected // Toggle the isSelected state
+
+                if (isSelected) {
+                    // Set background color when selected (medium gray)
+                    holder.titleTv.setTextColor(Color.parseColor("green"))
+                    Log.i(TAG, "onClick: inside if")
+                } else {
+                    // Set background color when not selected (white)
+                    holder.titleTv.setTextColor(Color.parseColor("black"))
+                    Log.i(TAG, "onClick: inside else")
+                }
+            }
+        })
+
+
+//        holder.link.text.setOnClickListener {
+//            val url = mList[position].html_url
+//            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+//            holder.itemView.context.startActivity(intent)
+//        }
     }
 
     override fun getItemCount(): Int {
