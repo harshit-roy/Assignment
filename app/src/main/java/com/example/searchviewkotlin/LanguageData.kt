@@ -1,3 +1,5 @@
 package com.example.searchviewkotlin
 
-data class LanguageData(val title : String, val logo : Int, val description :String, val link:String)
+data class LanguageData(
+    val items:List<Item>,
+)

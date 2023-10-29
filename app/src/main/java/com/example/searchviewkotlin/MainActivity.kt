@@ -17,21 +17,20 @@ import java.util.*
 class MainActivity : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var searchView: SearchView
-    private var mList = ArrayList<LanguageData>()
+    private var mList = ArrayList<Item>()
     private lateinit var adapter: LanguageAdapter
-
+    private val BASE_URL = "https://api.github.com/"
+    private var TAG:String = "CHECK_RESPONSE"
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
+        getAllData()
         recyclerView = findViewById(R.id.recyclerView)
         searchView = findViewById(R.id.searchView)
 
         recyclerView.setHasFixedSize(true)
         recyclerView.layoutManager = LinearLayoutManager(this)
-        addDataToList()
-        adapter = LanguageAdapter(mList)
-        recyclerView.adapter = adapter
+
 
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
@@ -46,12 +45,47 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
+    private fun getAllData(){
+        val api = Retrofit.Builder()
+            .baseUrl(BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create(MyApi::class.java)
+
+        api.getData().enqueue(object : Callback<LanguageData>{
+            override fun onResponse(
+                call: Call<LanguageData>,
+                response: Response<LanguageData>)
+
+            {
+                if(response.isSuccessful){
+                    response.body()?.items?.let{
+                        for(items in it){
+                            Log.i(TAG, "onResponse: ${Owner(items.owner.avatar_url)}")
+                            mList.add(Item(items.full_name,Owner(items.owner.avatar_url),items.html_url,items.description))
+                        }
+                    }
+
+                }
+                adapter = LanguageAdapter(mList)
+                recyclerView.adapter = adapter
+            }
+
+            override fun onFailure(call: Call<LanguageData>, t: Throwable) {
+                Log.i(TAG, "onFailure: ${t.message}")
+            }
+        })
+    }
+
+
+
+
     private fun filterList(query: String?) {
 
         if (query != null) {
-            val filteredList = ArrayList<LanguageData>()
+            val filteredList = ArrayList<Item>()
             for (i in mList) {
-                if (i.title.lowercase(Locale.ROOT).contains(query)) {
+                if (i.full_name.lowercase(Locale.ROOT).contains(query)) {
                     filteredList.add(i)
                 }
             }
@@ -62,21 +96,6 @@ class MainActivity : AppCompatActivity() {
                 adapter.setFilteredList(filteredList)
             }
         }
-    }
-
-    private fun addDataToList() {
-        mList.add(LanguageData("Cpp", R.drawable.java,"Capturing JVM- and application-level metrics. So you know what's going on.","https://github.com/dropwizard/metrics"))
-        mList.add(LanguageData("C", R.drawable.java,"Capturing JVM- and application-level metrics. So you know what's going on.","https://github.com/dropwizard/metrics"))
-        mList.add(LanguageData("Python", R.drawable.java,"Capturing JVM- and application-level metrics. So you know what's going on.","https://github.com/dropwizard/metrics"))
-        mList.add(LanguageData("Kotlin", R.drawable.java,"Capturing JVM- and application-level metrics. So you know what's going on.","https://github.com/dropwizard/metrics"))
-        mList.add(LanguageData("React", R.drawable.java,"Capturing JVM- and application-level metrics. So you know what's going on.","https://github.com/dropwizard/metrics"))
-        mList.add(LanguageData("Java", R.drawable.java,"Capturing JVM- and application-level metrics. So you know what's going on.","https://github.com/dropwizard/metrics"))
-        mList.add(LanguageData("Java", R.drawable.java,"chart_with_upwards_trend: Capturing JVM- and application-level metrics. So you know what's going on.","https://github.com/dropwizard/metrics"))
-        mList.add(LanguageData("Java", R.drawable.java,"chart_with_upwards_trend: Capturing JVM- and application-level metrics. So you know what's going on.","https://github.com/dropwizard/metrics"))
-        mList.add(LanguageData("Java", R.drawable.java,"chart_with_upwards_trend: Capturing JVM- and application-level metrics. So you know what's going on.","https://github.com/dropwizard/metrics"))
-        mList.add(LanguageData("Java", R.drawable.java,"chart_with_upwards_trend: Capturing JVM- and application-level metrics. So you know what's going on.","https://github.com/dropwizard/metrics"))
-        mList.add(LanguageData("Java", R.drawable.java,"chart_with_upwards_trend: Capturing JVM- and application-level metrics. So you know what's going on.","https://github.com/dropwizard/metrics"))
-        mList.add(LanguageData("Java", R.drawable.java,"chart_with_upwards_trend: Capturing JVM- and application-level metrics. So you know what's going on.","https://github.com/dropwizard/metrics"))
     }
 
 }
