@@ -21,19 +21,19 @@ class MainActivity : AppCompatActivity() {
     private lateinit var adapter: LanguageAdapter
     private val BASE_URL = "https://api.github.com/"
     private var TAG:String = "CHECK_RESPONSE"
-    fun test() {
-        val result = JUnitCore.runClasses(DemoTest::class.java)
-
-        for (failure in result.failures) {
-            println(failure.toString())
-        }
-
-        if (result.wasSuccessful()) {
-            println("All tests passed successfully!")
-        } else {
-            println("Some tests failed.")
-        }
-    }
+//    fun test() {
+//        val result = JUnitCore.runClasses(DemoTest::class.java)
+//
+//        for (failure in result.failures) {
+//            println(failure.toString())
+//        }
+//
+//        if (result.wasSuccessful()) {
+//            println("All tests passed successfully!")
+//        } else {
+//            println("Some tests failed.")
+//        }
+//    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
