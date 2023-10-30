@@ -13,7 +13,6 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.*
-import org.junit.runner.JUnitCore
 
 class MainActivity : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView

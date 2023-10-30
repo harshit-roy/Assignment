@@ -47,7 +47,6 @@ class LanguageAdapter(var mList: List<Item>) :
         val currentItem = mList[position]
         holder.titleTv.text = currentItem.full_name
 
-        // Check if the item is selected
         if (selectedItems.contains(currentItem)) {
             holder.titleTv.setTextColor(Color.parseColor("green"))
         } else {
@@ -55,7 +54,7 @@ class LanguageAdapter(var mList: List<Item>) :
         }
 
         holder.card.setOnClickListener {
-            // Toggle the selected state
+
             if (selectedItems.contains(currentItem)) {
                 selectedItems.remove(currentItem)
             } else {
