@@ -14,13 +14,10 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 class MainActivityTest {
-
     @Mock
     private lateinit var api: MyApi
-
     private lateinit var mockWebServer: MockWebServer
     private lateinit var mainActivity: MainActivity
-
     @Before
     fun setup() {
         MockitoAnnotations.initMocks(this)
@@ -31,7 +28,6 @@ class MainActivityTest {
             .baseUrl(mockWebServer.url("/"))
             .addConverterFactory(GsonConverterFactory.create())
             .build()
-
         api = retrofit.create(MyApi::class.java)
         mainActivity = MainActivity()
     }
@@ -43,28 +39,19 @@ class MainActivityTest {
 
     @Test
     fun testGetAllDataSuccess() {
-        // Arrange
         val mockResponse = MockResponse()
             .setResponseCode(200)
             .setBody("Success")
         mockWebServer.enqueue(mockResponse)
-
         mainActivity.getAllData()
-
     }
 
     @Test
     fun testGetAllDataFailure() {
-        // Arrange
         val mockResponse = MockResponse()
             .setResponseCode(404)
             .setBody("Failure")
         mockWebServer.enqueue(mockResponse)
-
-        // Act
         mainActivity.getAllData()
-
-        // Assert
-        // Add your assertions here based on the expected behavior of the function
     }
 }

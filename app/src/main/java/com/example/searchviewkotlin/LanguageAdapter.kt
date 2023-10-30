@@ -16,7 +16,7 @@ import com.bumptech.glide.Glide
 class LanguageAdapter(var mList: List<Item>) :
     RecyclerView.Adapter<LanguageAdapter.LanguageViewHolder>() {
     private var TAG: String = "CHECK_RESPONSE"
-
+    private val selectedItems = mutableListOf<Item>()
     inner class LanguageViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val logo: ImageView = itemView.findViewById(R.id.logoIv)
         val titleTv: TextView = itemView.findViewById(R.id.titleTv)
@@ -37,24 +37,32 @@ class LanguageAdapter(var mList: List<Item>) :
     }
 
     override fun onBindViewHolder(holder: LanguageViewHolder, position: Int) {
+
         val context =holder.itemView.context
         Glide.with(context).load(mList[position].owner.avatar_url).into(holder.logo)
-        holder.titleTv.text = mList[position].full_name
+
         holder.link.text = mList[position].html_url
         holder.description.text = mList[position].description
-        var isSelected = false
 
-        holder.card.setOnClickListener(object : View.OnClickListener {
-            override fun onClick(v: View) {
-                isSelected = !isSelected // Toggle the isSelected state
+        val currentItem = mList[position]
+        holder.titleTv.text = currentItem.full_name
 
-                if (isSelected) {
-                    holder.titleTv.setTextColor(Color.parseColor("green"))
-                } else {
-                    holder.titleTv.setTextColor(Color.parseColor("black"))
-                }
+        // Check if the item is selected
+        if (selectedItems.contains(currentItem)) {
+            holder.titleTv.setTextColor(Color.parseColor("green"))
+        } else {
+            holder.titleTv.setTextColor(Color.parseColor("black"))
+        }
+
+        holder.card.setOnClickListener {
+            // Toggle the selected state
+            if (selectedItems.contains(currentItem)) {
+                selectedItems.remove(currentItem)
+            } else {
+                selectedItems.add(currentItem)
             }
-        })
+            notifyDataSetChanged()
+        }
 
         holder.link.setOnClickListener {
             val url = mList[position].html_url

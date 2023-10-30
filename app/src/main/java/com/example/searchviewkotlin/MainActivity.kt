@@ -14,26 +14,14 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.*
 import org.junit.runner.JUnitCore
+
 class MainActivity : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var searchView: SearchView
     private var mList = ArrayList<Item>()
     private lateinit var adapter: LanguageAdapter
     private val BASE_URL = "https://api.github.com/"
-    private var TAG:String = "CHECK_RESPONSE"
-//    fun test() {
-//        val result = JUnitCore.runClasses(DemoTest::class.java)
-//
-//        for (failure in result.failures) {
-//            println(failure.toString())
-//        }
-//
-//        if (result.wasSuccessful()) {
-//            println("All tests passed successfully!")
-//        } else {
-//            println("Some tests failed.")
-//        }
-//    }
+    private var TAG: String = "CHECK_RESPONSE"
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -58,24 +46,30 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
-    fun getAllData(){
+    fun getAllData() {
         val api = Retrofit.Builder()
             .baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(MyApi::class.java)
 
-        api.getData().enqueue(object : Callback<LanguageData>{
+        api.getData().enqueue(object : Callback<LanguageData> {
             override fun onResponse(
                 call: Call<LanguageData>,
-                response: Response<LanguageData>)
-
-            {
-                if(response.isSuccessful){
-                    response.body()?.items?.let{
-                        for(items in it){
+                response: Response<LanguageData>
+            ) {
+                if (response.isSuccessful) {
+                    response.body()?.items?.let {
+                        for (items in it) {
                             Log.i(TAG, "onResponse: ${Owner(items.owner.avatar_url)}")
-                            mList.add(Item(items.full_name,Owner(items.owner.avatar_url),items.html_url,items.description))
+                            mList.add(
+                                Item(
+                                    items.full_name,
+                                    Owner(items.owner.avatar_url),
+                                    items.html_url,
+                                    items.description
+                                )
+                            )
                         }
                     }
 
@@ -89,8 +83,6 @@ class MainActivity : AppCompatActivity() {
             }
         })
     }
-
-
 
 
     private fun filterList(query: String?) {
