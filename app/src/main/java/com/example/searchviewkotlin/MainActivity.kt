@@ -13,7 +13,7 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.*
-
+import org.junit.runner.JUnitCore
 class MainActivity : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var searchView: SearchView
@@ -21,6 +21,19 @@ class MainActivity : AppCompatActivity() {
     private lateinit var adapter: LanguageAdapter
     private val BASE_URL = "https://api.github.com/"
     private var TAG:String = "CHECK_RESPONSE"
+    fun test() {
+        val result = JUnitCore.runClasses(DemoTest::class.java)
+
+        for (failure in result.failures) {
+            println(failure.toString())
+        }
+
+        if (result.wasSuccessful()) {
+            println("All tests passed successfully!")
+        } else {
+            println("Some tests failed.")
+        }
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -45,7 +58,7 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
-    private fun getAllData(){
+    fun getAllData(){
         val api = Retrofit.Builder()
             .baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())

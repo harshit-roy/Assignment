@@ -49,23 +49,18 @@ class LanguageAdapter(var mList: List<Item>) :
                 isSelected = !isSelected // Toggle the isSelected state
 
                 if (isSelected) {
-                    // Set background color when selected (medium gray)
                     holder.titleTv.setTextColor(Color.parseColor("green"))
-                    Log.i(TAG, "onClick: inside if")
                 } else {
-                    // Set background color when not selected (white)
                     holder.titleTv.setTextColor(Color.parseColor("black"))
-                    Log.i(TAG, "onClick: inside else")
                 }
             }
         })
 
-
-//        holder.link.text.setOnClickListener {
-//            val url = mList[position].html_url
-//            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-//            holder.itemView.context.startActivity(intent)
-//        }
+        holder.link.setOnClickListener {
+            val url = mList[position].html_url
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+            holder.itemView.context.startActivity(intent)
+        }
     }
 
     override fun getItemCount(): Int {
